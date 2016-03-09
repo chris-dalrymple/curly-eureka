@@ -20,9 +20,10 @@
 $params = Parse-Args $args
 
 $name = Get-Attr $params "name" -failifempty $true
-$memory = Get-Attr $params "mem_size" "1GB"
+$mem_size = Get-Attr $params "mem_size" "1GB"
 $disk_size = Get-Attr $params "disk_size" "5GB"
 $disk_path = Get-Attr $params "disk_path" "$name.vhdx"
+$adapter = Get-Attr $params "adapter"
 $state = Get-Attr $params "state" "present"
 
 # result
@@ -67,7 +68,7 @@ If ( $state -eq "present" )
     If($current_vms -notcontains $name)
     {
         New-VM -Name $name -MemoryStartupBytes $mem_size -BootDevice CD`
-          -Switchame $switch -NewVHDSizeBytes $disk_size`
+          -Switchame $adapter -NewVHDSizeBytes $disk_size`
           -NewVHDPath $disk_path
         $result.changed = $TRUE
     }
